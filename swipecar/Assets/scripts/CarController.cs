@@ -13,6 +13,7 @@ public class CarController : MonoBehaviour
     private State state;
     private bool isStop;
     public System.Action moveAction; // 대리자 변수정의
+    public System.Action moveCompleteAction;
 
     // 이벤트는 위에 
     void Start()
@@ -25,6 +26,13 @@ public class CarController : MonoBehaviour
         if (state == State.Move)
         {
             this.transform.Translate(moveSpeed, 0, 0);
+            // 화면을 넘어 갔다면 위치를 보정한다
+            float xPos = Mathf.Clamp(this.transform.position.x, -7.2f, 7.2f);
+            // 위치를 재설정
+            this.transform.position = new Vector3(xPos,
+                this.transform.position.y, this.transform.position.z);
+
+
             moveSpeed *= 0.96f; // 앞으로가기
                                 // UpdateDistanceUi();
                                 // Debug.Log(moveSpeed);
@@ -35,8 +43,9 @@ public class CarController : MonoBehaviour
             if (isStop != false)
             {
                 state = State.Stop;
-                Debug.Log(state);
+                Debug.Log("stop");
                 isStop = true;
+                moveCompleteAction();
             }
         }
         
@@ -45,6 +54,9 @@ public class CarController : MonoBehaviour
     // 내가 만든 메서드는 아래
     public void Move(InputManager.Direction direction)
     {
+      AudioSource audioSource = this.gameObject.GetComponent<AudioSource>();
+        audioSource.Play();
+
         int dir = (int)direction;
         Debug.Log($"<color=yellow>Move: {direction}, {dir}</color>");
         float speed = 0.1f;
@@ -52,5 +64,6 @@ public class CarController : MonoBehaviour
         Debug.Log($"<color=yellow>moveSpeed: {moveSpeed}</color>");
         this.state = State.Move;
         isStop = false;
+        Debug.Log(state);
     }
 }

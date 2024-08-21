@@ -41,6 +41,7 @@ public class InputManager : MonoBehaviour
                 // swipeAction 주소 확인용
                 // System.Action'1[InputManage+Diraction]
                // Debug.Log($"swipeAction: {swipeAction}");
+
                 //대리자호출               
                 this.swipeAction(Direction.Right);
             }
